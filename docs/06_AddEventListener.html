@@ -9,7 +9,6 @@
 </head>
 
 <body style="background-color: #023020;">
-
     <div id="container"></div>
     <py-script>
         import asyncio
@@ -28,20 +27,17 @@
         # On Click callback
         def on_click(event):
             c = event.currentTarget.id
-            # Bingo
             if c == "mj-o":
-                print(f"Bingo! Python is clicked!")
                 for i in "pycon-hk":
                     container.querySelector(f"#mj-{i}").classList.toggle('flip')
             else:
                 container.querySelector('#'+c).classList.toggle('flip')
-
+                
         # Register buttons
         for i in "pycon-hk":
             button = container.querySelector(f"#mj-{i}")
             button.classList.add("clickable")
             button.addEventListener("click", create_proxy(on_click))
-
     </py-script>
 
 </body>
