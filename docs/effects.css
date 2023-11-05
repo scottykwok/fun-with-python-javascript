@@ -105,9 +105,12 @@
     to {
         -webkit-transform:
             rotateZ(360deg);
+        -webkit-transform-origin:
+            right;
         transform:
             rotateZ(360deg);
-        transform-origin: right;
+        transform-origin:
+            right;
     }
 }
 
