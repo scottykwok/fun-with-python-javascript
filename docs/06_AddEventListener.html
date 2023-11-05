@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Convert SVG element to a button</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.03.1/pyscript.css" />
+    <script defer src="https://pyscript.net/releases/2023.03.1/pyscript.js"></script>
+    <link rel="stylesheet" href="effects.css">
+</head>
+
+<body style="background-color: #023020;">
+
+    <div id="container" style="width: 200px;"></div>
+    <py-script>
+        import asyncio
+        from js import document
+        from pyodide.http import open_url
+        from pyodide.ffi import create_proxy
+
+        def load_svg(elementId, url):
+            container = document.getElementById(elementId)
+            container.innerHTML = open_url(url).read()
+            return container
+
+        # Load SVG
+        container = load_svg("container", "images/python-hk.svg")
+
+        # On Click callback
+        def on_click(event):
+            print(f"{event.currentTarget.id} is clicked!")
+            container.querySelector('#'+event.currentTarget.id).classList.toggle('flip')
+
+        # Register buttons
+        for c in "pycon-hk":
+            button = container.querySelector(f"#mj-{c}")
+            button.classList.add("clickable")
+            button.addEventListener("click", create_proxy(on_click))
+
+    </py-script>
+
+</body>
+</html>

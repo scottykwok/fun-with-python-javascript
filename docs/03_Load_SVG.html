@@ -1,0 +1,19 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.03.1/pyscript.css"/>
+    <script defer src="https://pyscript.net/releases/2023.03.1/pyscript.js"></script>
+</head>
+<body>
+    <div id="container"></div>
+
+    <py-script>
+        from js import document
+        from pyodide.http import open_url
+
+        e = document.querySelector("#container")
+        e.innerHTML = open_url("images/python-mahjong.svg").read()
+    </py-script>
+
+</body>
+</html>
+
