@@ -18,41 +18,55 @@
             }
         </script>
         <script>
-            (async () => { THREE = await import('three')})()
+            var hasImported = false;
+            (async () => {
+                THREE = await import('three');
+                hasImported = true;
+            })()
         </script>
 
         <py-script>
-            from js import document, window
-            from js import THREE
-            from pyodide.ffi import create_proxy
+            import asyncio
 
-            # Init
-            width, height = window.innerWidth, window.innerHeight
-            camera = THREE.PerspectiveCamera.new(70, width / height, 0.01, 10)
-            camera.position.z = 1
+            async def importJS():
+                while not js.hasImported:
+                    await asyncio.sleep(0.05)
 
-            # content
-            geometry = THREE.BoxGeometry.new(0.4, 0.4, 0.4)
-            texture = THREE.TextureLoader.new().load("images/crate.gif")
-            texture.colorSpace = THREE.SRGBColorSpace
-            material = THREE.MeshBasicMaterial.new()
-            material.map = texture
-            mesh = THREE.Mesh.new(geometry, material)
-            scene = THREE.Scene.new()
-            scene.add(mesh)
+            async def main():
+                await importJS()
+                from js import document, window
+                from js import THREE
+                from pyodide.ffi import create_proxy
 
-            # animation
-            def animation(time):
-                mesh.rotation.x = time / 1000
-                mesh.rotation.y = time / 1000
-                renderer.render(scene, camera)
+                # Init
+                width, height = window.innerWidth, window.innerHeight
+                camera = THREE.PerspectiveCamera.new(70, width / height, 0.01, 10)
+                camera.position.z = 1
 
-            renderer = THREE.WebGLRenderer.new({"antialias": True})
-            renderer.setSize(width, height)
-            renderer.setAnimationLoop(create_proxy(animation))
+                # content
+                geometry = THREE.BoxGeometry.new(0.4, 0.4, 0.4)
+                texture = THREE.TextureLoader.new().load("images/crate.gif")
+                texture.colorSpace = THREE.SRGBColorSpace
+                material = THREE.MeshBasicMaterial.new()
+                material.map = texture
+                mesh = THREE.Mesh.new(geometry, material)
+                scene = THREE.Scene.new()
+                scene.add(mesh)
 
-            # Add to document
-            document.body.appendChild(renderer.domElement)
+                # animation
+                def animation(time):
+                    mesh.rotation.x = time / 1000
+                    mesh.rotation.y = time / 1000
+                    renderer.render(scene, camera)
+
+                renderer = THREE.WebGLRenderer.new({"antialias": True})
+                renderer.setSize(width, height)
+                renderer.setAnimationLoop(create_proxy(animation))
+
+                # Add to document
+                document.body.appendChild(renderer.domElement)
+
+            asyncio.ensure_future(main())
         </py-script>
 	</body>
 </html>

@@ -20,77 +20,96 @@
             }
             }
         </script>
+
         <script>
+            var hasImported = false;
             (async () => {
-                await Promise.all([
-                    THREE = await import('three'),
-                    GLTFLoader = await import('GLTFLoader'),
-                    RGBELoader = await import('RGBELoader'),
-                    OrbitControls = await import('OrbitControls')
-                ])
+                THREE = await import('three');
+                GLTFLoader = await import('GLTFLoader');
+                RGBELoader = await import('RGBELoader');
+                OrbitControls = await import('OrbitControls');
+                hasImported = true;
             })()
         </script>
 
         <py-script>
-            from js import document, window
-            from js import THREE, GLTFLoader, RGBELoader, OrbitControls
-            from pyodide.ffi import create_proxy
+            import asyncio
 
-            # Init
-            width, height = window.innerWidth, window.innerHeight
-            camera = THREE.PerspectiveCamera.new(45, width / height, 0.25, 20)
-            camera.position.x, camera.position.y, camera.position.z = -1.8, 0.6, 2.7
-            scene = THREE.Scene.new()
+            async def importJS():
+                while not js.hasImported:
+                    await asyncio.sleep(0.05)
 
-            # renderer
-            canvas = document.querySelector("canvas.webgl")
-            renderer = THREE.WebGLRenderer.new({"antialias": True, "canvas": canvas})
-            renderer.setPixelRatio(window.devicePixelRatio)
-            renderer.setSize(width, height)
-            renderer.toneMapping = THREE.ACESFilmicToneMapping #added contrast for filmic look
-            renderer.toneMappingExposure = 1
-            renderer.outputEncoding = THREE.sRGBEncoding #extended color space for the hdr
+            async def main():
+                await importJS()
 
-            def render(e):
-                renderer.render(scene, camera)
+                from js import document, window
+                from js import THREE, GLTFLoader, RGBELoader, OrbitControls
+                from pyodide.ffi import create_proxy
 
-            #Orbit Controls
-            controls = OrbitControls.OrbitControls.new(camera, renderer.domElement)
-            controls.addEventListener("change", create_proxy(render)) #use if there is no animation loop to render after any changes
-            controls.minDistance = 2
-            controls.maxDistance = 10
-            controls.target.set(0, 0, -0.2)
-            controls.update()
+                # Init
+                camera = THREE.PerspectiveCamera.new(45, window.innerWidth/window.innerHeight, 0.25, 20)
+                camera.position.x, camera.position.y, camera.position.z = -1.8, 0.6, 2.7
+                scene = THREE.Scene.new()
 
-            # load env
-            def on_texture(texture, data):
-                pmremGenerator = THREE.PMREMGenerator.new(renderer)
-                pmremGenerator.compileEquirectangularShader()
-                envMap = pmremGenerator.fromEquirectangular(texture).texture
-                scene.background = envMap #this loads the envMap for the background
-                scene.environment = envMap #this loads the envMap for reflections and lighting
-                texture.dispose() #we have envMap so we can erase the texture
-                pmremGenerator.dispose() #we processed the image into envMap so we can stop this
+                # renderer
+                canvas = document.querySelector("canvas.webgl")
+                renderer = THREE.WebGLRenderer.new({"antialias": True, "canvas": canvas})
+                renderer.setPixelRatio(window.devicePixelRatio)
+                renderer.setSize(window.innerWidth, window.innerHeight)
+                renderer.toneMapping = THREE.ACESFilmicToneMapping #added contrast for filmic look
+                renderer.toneMappingExposure = 1
+                renderer.outputEncoding = THREE.sRGBEncoding #extended color space for the hdr
 
-            envLoader = RGBELoader.RGBELoader.new()
-            envLoader.setDataType(THREE.HalfFloatType)
-            envLoader.load(
-                "https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/equirectangular/royal_esplanade_1k.hdr",
-                create_proxy(on_texture)
-            )
+                def render(e):
+                    renderer.render(scene, camera)
 
+                #Orbit Controls
+                controls = OrbitControls.OrbitControls.new(camera, renderer.domElement)
+                controls.addEventListener("change", create_proxy(render)) #use if there is no animation loop to render after any changes
+                controls.minDistance = 2
+                controls.maxDistance = 10
+                controls.target.set(0, 0, -0.2)
+                controls.update()
 
-            # load model
-            loader = GLTFLoader.GLTFLoader.new()
-            loader.load(
-                "https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf",
-                create_proxy(
-                    lambda gltf: (scene.add(gltf.scene), render(None))
+                # load env
+                def on_texture(texture, data):
+                    pmremGenerator = THREE.PMREMGenerator.new(renderer)
+                    pmremGenerator.compileEquirectangularShader()
+                    envMap = pmremGenerator.fromEquirectangular(texture).texture
+                    scene.background = envMap #this loads the envMap for the background
+                    scene.environment = envMap #this loads the envMap for reflections and lighting
+                    texture.dispose() #we have envMap so we can erase the texture
+                    pmremGenerator.dispose() #we processed the image into envMap so we can stop this
+
+                envLoader = RGBELoader.RGBELoader.new()
+                envLoader.setDataType(THREE.HalfFloatType)
+                envLoader.load(
+                    "https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/equirectangular/royal_esplanade_1k.hdr",
+                    create_proxy(on_texture)
                 )
-            )
 
-            # Add to document
-            document.body.appendChild(renderer.domElement)
+
+                # load model
+                loader = GLTFLoader.GLTFLoader.new()
+                loader.load(
+                    "https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf",
+                    create_proxy(
+                        lambda gltf: (scene.add(gltf.scene), render(None))
+                    )
+                )
+
+                # Resize listener
+                def onWindowResize(e):
+                    camera.aspect = window.innerWidth / window.innerHeight
+                    camera.updateProjectionMatrix()
+                    renderer.setSize(window.innerWidth, window.innerHeight)
+                    render(e)
+                window.addEventListener("resize", create_proxy(onWindowResize))
+
+                # Add to document
+                document.body.appendChild(renderer.domElement)
+
+            asyncio.ensure_future(main())
         </py-script>
 	</body>
 </html>
