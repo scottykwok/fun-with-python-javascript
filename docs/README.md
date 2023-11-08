@@ -26,4 +26,4 @@
 
    [3D Model](https://scottykwok.github.io/fun-with-python-javascript/09_Three_Js/Load_GLTF.html) | [code](09_Three_Js/Load_GLTF.html)
 
-10. [Electron App](tbc) | [code](tbc)
+10. Electron App | [code](10_Electron_js/)
