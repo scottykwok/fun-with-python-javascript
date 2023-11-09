@@ -1,7 +1,7 @@
 
 ```bash
 # To update the dependencty
-#npm update
+npm update
 
 # To start the app
 npm start
