@@ -18,12 +18,13 @@
 
 7. [Ascync Timer](https://scottykwok.github.io/fun-with-python-javascript/07_Timer_Async.html) | [code](07_Timer_Async.html)
 
+8. [3D Hello World](https://scottykwok.github.io/fun-with-python-javascript/08_Three_Js/HelloWorld.html) | [code](08_Three_Js/HelloWorld.html)
+
+   [3D Model](https://scottykwok.github.io/fun-with-python-javascript/08_Three_Js/Load_GLTF.html) | [code](08_Three_Js/Load_GLTF.html)
+
 ## Part 2
 
-8. Chrome extension | [code](08_chrome_extension/manifest.json)
+9. Chrome extension | [code](09_chrome_extension/manifest.json)
 
-9. [3D Hello World](https://scottykwok.github.io/fun-with-python-javascript/09_Three_Js/HelloWorld.html) | [code](09_Three_Js/HelloWorld.html)
-
-   [3D Model](https://scottykwok.github.io/fun-with-python-javascript/09_Three_Js/Load_GLTF.html) | [code](09_Three_Js/Load_GLTF.html)
 
 10. Electron App | [code](10_Electron_js/)
