@@ -28,12 +28,10 @@
         <py-script>
             import asyncio
 
-            async def importJS():
+            async def main():
+                # wait for JS import
                 while not js.hasImported:
                     await asyncio.sleep(0.1)
-
-            async def main():
-                await importJS()
                 from js import document, window
                 from js import THREE
                 from pyodide.ffi import create_proxy
