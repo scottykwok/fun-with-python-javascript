@@ -1,6 +1,5 @@
-# Materials for PyCon Hong Kong 2023
+# 玩轉 Python 與 Javascript
 
-## Part 1
 
 0. [Pyodide Hello World](https://scottykwok.github.io/fun-with-python-javascript/00_Pyodide_HelloWorld.html) | [code](00_Pyodide_HelloWorld.html)
 
@@ -22,9 +21,6 @@
 
    [3D Model](https://scottykwok.github.io/fun-with-python-javascript/08_Three_Js/Load_GLTF.html) | [code](08_Three_Js/Load_GLTF.html)
 
-## Part 2
+10. Chrome Extension | [code](09_Chrome_Extension/manifest.json)
 
-9. Chrome extension | [code](09_chrome_extension/manifest.json)
-
-
-10. Electron App | [code](10_Electron_js/)
+11.  Electron JS App | [code](10_Electron_Js)
