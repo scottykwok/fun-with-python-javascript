@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html style="height: 400px; width: 600px;">
+
+<head>
+    <title>Convert SVG element to a button</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.03.1/pyscript.css" />
+    <script defer src="https://pyscript.net/releases/2023.03.1/pyscript.js"></script>
+    <link rel="stylesheet" href="effects.css">
+</head>
+
+<body style="background-color: #023020;">
+    <div id="container"></div>
+    <py-script>
+        import asyncio
+        from js import document
+        import random
+        from pyodide.http import open_url
+        from pyodide.ffi import create_proxy
+
+        def load_svg(elementId, url):
+            container = document.getElementById(elementId)
+            container.innerHTML = open_url(url).read()
+            return container
+
+        # Load SVG
+        container = load_svg("container", "images/python-hk.svg")
+
+        async def animation():
+            while True:
+                for c in "pycon-hk":
+                    if random.randint(0,3) % 3 == 0:
+                        container.querySelector(f"#mj-{c}").classList.toggle('flip')
+                await asyncio.sleep(0.8)
+
+        asyncio.ensure_future(animation())
+    </py-script>
+
+</body>
+</html>

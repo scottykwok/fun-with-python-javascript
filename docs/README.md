@@ -15,7 +15,7 @@
 
 6. [Event Listener](https://scottykwok.github.io/fun-with-python-javascript/06_AddEventListener.html) | [code](06_AddEventListener.html)
 
-7. [Ascync Timer](https://scottykwok.github.io/fun-with-python-javascript/07_Timer_Async.html) | [code](07_Timer_Async.html)
+7. [Asynchronous](https://scottykwok.github.io/fun-with-python-javascript/07_Animation_Async.html) | [code](07_Animation_Async.html)
 
 8. [3D Hello World](https://scottykwok.github.io/fun-with-python-javascript/08_Three_Js/HelloWorld.html) | [code](08_Three_Js/HelloWorld.html)
 
